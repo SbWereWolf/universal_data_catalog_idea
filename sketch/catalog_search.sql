@@ -112,45 +112,43 @@ WHERE
         ) R
   );
 
--- числовые системные свойства с типом поиска по диапазону
+-- Для поиска по рубрике необходимо сформировать параметры поиска - диапазоны допустимых значений для системных свойств
 SELECT
-  p.code
+  btrim(p.code) AS "property",
+  btrim(tu.code) AS "author_type",
+  btrim(ts.code) AS "search_type",
+  btrim(tt.code) AS "data_type"
 FROM
   rubric r
   JOIN rubric_property rp
     ON rp.rubric_id = r.id
   JOIN property p
     ON rp.property_id = p.id
+  JOIN property_tag ptu
+    on p.id = ptu.property_id
+  JOIN tag tu
+    on ptu.tag_id = tu.id
+
+  JOIN property_tag pts
+    on p.id = pts.property_id
+  JOIN tag ts
+    on pts.tag_id = ts.id
+
+  JOIN property_tag ptt
+    on p.id = ptt.property_id
+  JOIN tag tt
+    on ptt.tag_id = tt.id
 WHERE
   r.code = 'ekskavatory-karernye'
-  AND EXISTS(
-      SELECT NULL
-      FROM
-        property_tag pt
-        JOIN tag t
-          ON pt.tag_id = t.id
-      WHERE
-        pt.property_id = p.id AND t.code = 'DIGITAL_DATA_TYPE'
-  )
-  AND EXISTS(
-      SELECT NULL
-      FROM
-        property_tag pt
-        JOIN tag t
-          ON pt.tag_id = t.id
-      WHERE
-        pt.property_id = p.id AND t.code = 'BETWEEN_SEARCH_TYPE'
-  )
-  AND EXISTS(
-      SELECT NULL
-      FROM
-        property_tag pt
-        JOIN tag t
-          ON pt.tag_id = t.id
-      WHERE
-        pt.property_id = p.id AND t.code = 'SYSTEM_PROPERTY'
-  )
+  AND tu.code = 'SYSTEM_PROPERTY'
+  AND ts.code IN ('LIKE_SEARCH_TYPE','BETWEEN_SEARCH_TYPE','ENUMERATION_SEARCH_TYPE')
+  AND tt.code IN ('DIGITAL_DATA_TYPE','STRING_DATA_TYPE')
 ;
+/*
+MANUFACTURER_MODEL,SYSTEM_PROPERTY,LIKE_SEARCH_TYPE,STRING_DATA_TYPE
+TRADE_MARK,SYSTEM_PROPERTY,ENUMERATION_SEARCH_TYPE,STRING_DATA_TYPE
+BUCKET_CAPACITY_M3,SYSTEM_PROPERTY,BETWEEN_SEARCH_TYPE,DIGITAL_DATA_TYPE
+*/
 
 -- формирование параметров поиска
 SELECT
@@ -177,46 +175,6 @@ WHERE
 25,0.75
 */
 
--- строковые системные свойства с поиском по перечислению
-SELECT
-  p.code
-FROM
-  rubric r
-  JOIN rubric_property rp
-    ON rp.rubric_id = r.id
-  JOIN property p
-    ON rp.property_id = p.id
-WHERE
-  r.code = 'ekskavatory-karernye'
-  AND EXISTS(
-      SELECT NULL
-      FROM
-        property_tag pt
-        JOIN tag t
-          ON pt.tag_id = t.id
-      WHERE
-        pt.property_id = p.id AND t.code = 'STRING_DATA_TYPE'
-  )
-  AND EXISTS(
-      SELECT NULL
-      FROM
-        property_tag pt
-        JOIN tag t
-          ON pt.tag_id = t.id
-      WHERE
-        pt.property_id = p.id AND t.code = 'ENUMERATION_SEARCH_TYPE'
-  )
-  AND EXISTS(
-      SELECT NULL
-      FROM
-        property_tag pt
-        JOIN tag t
-          ON pt.tag_id = t.id
-      WHERE
-        pt.property_id = p.id AND t.code = 'SYSTEM_PROPERTY'
-  )
-;
-
 -- формирование параметров поиска
 SELECT
   sm.string
@@ -242,46 +200,6 @@ GROUP BY sm.string;
 Уралмаш
 Донэкс
 */
-
-SELECT
-  p.code
-FROM
-  rubric r
-  JOIN rubric_property rp
-    ON rp.rubric_id = r.id
-  JOIN property p
-    ON rp.property_id = p.id
-WHERE
-  r.code = 'ekskavatory-karernye'
-  AND EXISTS(
-      SELECT NULL
-      FROM
-        property_tag pt
-        JOIN tag t
-          ON pt.tag_id = t.id
-      WHERE
-        pt.property_id = p.id AND t.code = 'STRING_DATA_TYPE'
-  )
-  AND EXISTS(
-      SELECT NULL
-      FROM
-        property_tag pt
-        JOIN tag t
-          ON pt.tag_id = t.id
-      WHERE
-        pt.property_id = p.id AND t.code = 'LIKE_SEARCH_TYPE'
-  )
-  AND EXISTS(
-      SELECT NULL
-      FROM
-        property_tag pt
-        JOIN tag t
-          ON pt.tag_id = t.id
-      WHERE
-        pt.property_id = p.id AND t.code = 'SYSTEM_PROPERTY'
-  )
-;
-/* MANUFACTURER_MODEL */
 
 -- поиск по рубрике
 /*
@@ -367,3 +285,126 @@ WHERE
   AND p.code = :BUCKET_PROPERTY
   AND dm.digital BETWEEN :MIN_BUCKET AND :MAX_BUCKET
 ;
+
+
+SELECT
+  btrim(p.code) AS "property",
+  btrim(tu.code) AS "author_type",
+  btrim(ts.code) AS "search_type",
+  btrim(tt.code) AS "data_type"
+FROM
+  rubric r
+  JOIN rubric_property rp
+    ON rp.rubric_id = r.id
+  JOIN property p
+    ON rp.property_id = p.id
+  JOIN property_tag ptu
+    on p.id = ptu.property_id
+  JOIN tag tu
+    on ptu.tag_id = tu.id
+
+  JOIN property_tag pts
+    on p.id = pts.property_id
+  JOIN tag ts
+    on pts.tag_id = ts.id
+
+  JOIN property_tag ptt
+    on p.id = ptt.property_id
+  JOIN tag tt
+    on ptt.tag_id = tt.id
+WHERE
+  r.code = 'ekskavatory-pogruzchiki'
+  AND tu.code = 'USER_PROPERTY'
+  AND ts.code IN ('LIKE_SEARCH_TYPE','BETWEEN_SEARCH_TYPE','ENUMERATION_SEARCH_TYPE')
+  AND tt.code IN ('DIGITAL_DATA_TYPE','STRING_DATA_TYPE')
+;
+/*
+GOODS_ITEM_PRICE_RUB,USER_PROPERTY,BETWEEN_SEARCH_TYPE,DIGITAL_DATA_TYPE
+GOODS_ITEM_UNITS_OF_MEASURE,USER_PROPERTY,ENUMERATION_SEARCH_TYPE,STRING_DATA_TYPE
+*/
+
+-- формирование параметров поиска по Сущности 'jcb-4cx'
+SELECT
+  min(dm.digital) AS minimum,
+  max(dm.digital) AS maximum
+FROM
+
+  item i
+  JOIN item_content ic
+    ON i.id = ic.item_id
+  JOIN content c
+    ON ic.content_id = c.id
+  JOIN property p
+    ON c.property_id = p.id
+  JOIN digital_matter dm
+    ON c.id = dm.content_id
+WHERE
+  p.code = 'GOODS_ITEM_PRICE_RUB'
+  AND i.code = 'jcb-4cx';
+/*
+3400000
+4700000
+*/
+
+SELECT
+  sm.string
+FROM
+  item i
+  JOIN item_content ic
+    ON i.id = ic.item_id
+  JOIN content c
+    ON ic.content_id = c.id
+  JOIN property p
+    ON c.property_id = p.id
+  JOIN string_matter sm
+    ON c.id = sm.content_id
+WHERE
+  p.code = 'GOODS_ITEM_UNITS_OF_MEASURE'
+  AND i.code = 'jcb-4cx'
+GROUP BY sm.string;
+/*
+р/шт
+шт
+шт.
+*/
+
+
+/*
+:ITEM_CODE => 'jcb-4cx'
+:PRICE_PROPERTY => 'GOODS_ITEM_PRICE_RUB'
+:MIN_PRICE => 3400000
+:MAX_PRICE => 4000000
+*/
+SELECT
+  r.id,
+  r.title,
+  r.description,
+  c.raw
+FROM
+  item i
+  JOIN item_content ic
+    ON i.id = ic.item_id
+  JOIN content c
+    ON ic.content_id = c.id
+  JOIN redactor_content rc
+    ON c.id = rc.content_id
+  JOIN redactor r
+    ON rc.redactor_id = r.id
+  JOIN digital_matter dm
+    ON c.id = dm.content_id
+  JOIN rubric_item ri
+    ON i.id = ri.item_id
+  JOIN rubric_property rp
+    ON ri.rubric_id = rp.rubric_id
+  JOIN property p
+    ON c.property_id = p.id
+       AND p.id = rp.property_id
+WHERE
+  i.code = :ITEM_CODE
+  AND p.code = :PRICE_PROPERTY
+  AND dm.digital BETWEEN :MIN_PRICE AND :MAX_PRICE
+;
+/*
+Василий Алибабаевич Уримчи,бригадир СМУ-3,3 800 000
+Олег,Мы всегда можем договориться о взаимовыгодном сотрудничестве,3 400 000
+*/

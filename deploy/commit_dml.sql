@@ -33,7 +33,7 @@ VALUES
   (( SELECT id FROM property WHERE code = 'SERVICE_POSITION_PRICE_RUB' ), ( SELECT id FROM tag WHERE code = 'USER_PROPERTY' ));
 
 INSERT INTO property (code, title, description)
-VALUES ('GOODS_ITEM_UNITS_OF_MEASURE', 'единицы измерения для товарной позции',
+VALUES ('GOODS_ITEM_UNITS_OF_MEASURE', 'единицы измерения для товарной позиции',
         'единицы измерения для единицы товарной позиции');
 
 INSERT INTO property_tag
@@ -1555,3 +1555,100 @@ INSERT INTO string_matter (string, content_id) VALUES
 ('р/шт',(SELECT c.id from content c WHERE raw = 'р/шт' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_UNITS_OF_MEASURE') AND NOT EXISTS (SELECT NULL from string_matter WHERE content_id = c.id)LIMIT 1));
 INSERT INTO string_matter (string, content_id) VALUES
 ('р/шт',(SELECT c.id from content c WHERE raw = 'р/шт' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_UNITS_OF_MEASURE') AND NOT EXISTS (SELECT NULL from string_matter WHERE content_id = c.id)LIMIT 1));
+
+
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'petya@gmail.com'),
+ (SELECT c.id from content c WHERE raw = '3 600 000' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_PRICE_RUB') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'petya@gmail.com'),
+ (SELECT c.id from content c WHERE raw = '1 500 000' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_PRICE_RUB') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'petya@gmail.com'),
+ (SELECT c.id from content c WHERE raw = '1 702 499' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_PRICE_RUB') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'petya@gmail.com'),
+ (SELECT c.id from content c WHERE raw = '4 700 000' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_PRICE_RUB') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'petya@gmail.com'),
+ (SELECT c.id from content c WHERE raw = '3 500 000' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_PRICE_RUB') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'vasya@mail.ru'),
+ (SELECT c.id from content c WHERE raw = '3 240 050' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_PRICE_RUB') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'vasya@mail.ru'),
+ (SELECT c.id from content c WHERE raw = '1750000' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_PRICE_RUB') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'vasya@mail.ru'),
+ (SELECT c.id from content c WHERE raw = '3 300 000' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_PRICE_RUB') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'vasya@mail.ru'),
+ (SELECT c.id from content c WHERE raw = '3 800 000' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_PRICE_RUB') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'vasya@mail.ru'),
+ (SELECT c.id from content c WHERE raw = '3 700 000' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_PRICE_RUB') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'oleg@yandex.ru'),
+ (SELECT c.id from content c WHERE raw = '2 270 000' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_PRICE_RUB') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'oleg@yandex.ru'),
+ (SELECT c.id from content c WHERE raw = '1 950 000' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_PRICE_RUB') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'oleg@yandex.ru'),
+ (SELECT c.id from content c WHERE raw = '2 200 000' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_PRICE_RUB') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'oleg@yandex.ru'),
+ (SELECT c.id from content c WHERE raw = '5 100 000' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_PRICE_RUB') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'oleg@yandex.ru'),
+ (SELECT c.id from content c WHERE raw = '3 400 000' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_PRICE_RUB') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'petya@gmail.com')
+  ,(SELECT c.id from content c WHERE raw = 'шт' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_UNITS_OF_MEASURE') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'petya@gmail.com'),
+ (SELECT c.id from content c WHERE raw = 'шт' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_UNITS_OF_MEASURE') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'petya@gmail.com'),
+ (SELECT c.id from content c WHERE raw = 'шт' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_UNITS_OF_MEASURE') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'petya@gmail.com'),
+ (SELECT c.id from content c WHERE raw = 'шт' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_UNITS_OF_MEASURE') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'petya@gmail.com'),
+ (SELECT c.id from content c WHERE raw = 'шт' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_UNITS_OF_MEASURE') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'vasya@mail.ru'),
+ (SELECT c.id from content c WHERE raw = 'шт.' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_UNITS_OF_MEASURE') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'vasya@mail.ru'),
+ (SELECT c.id from content c WHERE raw = 'шт.' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_UNITS_OF_MEASURE') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'vasya@mail.ru'),
+ (SELECT c.id from content c WHERE raw = 'шт.' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_UNITS_OF_MEASURE') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'vasya@mail.ru'),
+ (SELECT c.id from content c WHERE raw = 'шт.' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_UNITS_OF_MEASURE') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'vasya@mail.ru'),
+ (SELECT c.id from content c WHERE raw = 'шт.' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_UNITS_OF_MEASURE') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'oleg@yandex.ru'),
+ (SELECT c.id from content c WHERE raw = 'р/шт' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_UNITS_OF_MEASURE') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'oleg@yandex.ru'),
+ (SELECT c.id from content c WHERE raw = 'р/шт' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_UNITS_OF_MEASURE') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'oleg@yandex.ru'),
+ (SELECT c.id from content c WHERE raw = 'р/шт' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_UNITS_OF_MEASURE') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'oleg@yandex.ru'),
+ (SELECT c.id from content c WHERE raw = 'р/шт' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_UNITS_OF_MEASURE') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));
+INSERT INTO redactor_content (redactor_id, content_id) VALUES
+((SELECT id from redactor where code = 'oleg@yandex.ru'),
+ (SELECT c.id from content c WHERE raw = 'р/шт' AND property_id = (SELECT id from property where code = 'GOODS_ITEM_UNITS_OF_MEASURE') AND NOT EXISTS (SELECT NULL from redactor_content WHERE content_id = c.id)LIMIT 1));

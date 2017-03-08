@@ -176,7 +176,7 @@ FROM
 ORDER BY
   horizont DESC;
 
--- показать карту иерархии Сущностей с уровнем иерархии 'GOODS'
+-- показать карту иерархии Сущностей с уровнем иерархии, для корневой рубрики 'GOODS'
 WITH RECURSIVE road_map ( id, element_tree_id, code, horizont ) AS
 (
   SELECT
