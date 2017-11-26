@@ -13,32 +13,32 @@ WHERE
       SELECT NULL
       FROM
         (
-          WITH RECURSIVE road_map ( id, element_tree_id, code, horizont ) AS
+          WITH RECURSIVE road_map ( id, structure_tree_id, code, horizont ) AS
           (
             SELECT
               cet.id              AS id,
-              cet.element_tree_id AS element_tree_id,
+              cet.structure_tree_id AS structure_tree_id,
               r.code              AS code,
               0                   AS horizont
             FROM
-              element_tree cet
-              LEFT JOIN rubric_element_tree ret
-                ON cet.id = ret.element_tree_id
+              structure_tree cet
+              LEFT JOIN rubric_structure_tree ret
+                ON cet.id = ret.structure_tree_id
               LEFT JOIN rubric r
                 ON ret.rubric_id = r.id
             WHERE r.code = rr.code
             UNION
             SELECT
               pet.id,
-              pet.element_tree_id,
+              pet.structure_tree_id,
               r.code,
               horizont + 1
             FROM
-              element_tree pet
+              structure_tree pet
               JOIN road_map c
-                ON (c.element_tree_id = pet.id)
-              LEFT JOIN rubric_element_tree ret
-                ON pet.id = ret.element_tree_id
+                ON (c.structure_tree_id = pet.id)
+              LEFT JOIN rubric_structure_tree ret
+                ON pet.id = ret.structure_tree_id
               LEFT JOIN rubric r
                 ON ret.rubric_id = r.id
           )
@@ -72,32 +72,32 @@ WHERE
       SELECT NULL
       FROM
         (
-          WITH RECURSIVE road_map ( id, element_tree_id, code, horizont ) AS
+          WITH RECURSIVE road_map ( id, structure_tree_id, code, horizont ) AS
           (
             SELECT
               cet.id              AS id,
-              cet.element_tree_id AS element_tree_id,
+              cet.structure_tree_id AS structure_tree_id,
               r.code              AS code,
               0                   AS horizont
             FROM
-              element_tree cet
-              LEFT JOIN rubric_element_tree ret
-                ON cet.id = ret.element_tree_id
+              structure_tree cet
+              LEFT JOIN rubric_structure_tree ret
+                ON cet.id = ret.structure_tree_id
               LEFT JOIN rubric r
                 ON ret.rubric_id = r.id
             WHERE r.code = rr.code
             UNION
             SELECT
               pet.id,
-              pet.element_tree_id,
+              pet.structure_tree_id,
               r.code,
               horizont + 1
             FROM
-              element_tree pet
+              structure_tree pet
               JOIN road_map c
-                ON (c.element_tree_id = pet.id)
-              LEFT JOIN rubric_element_tree ret
-                ON pet.id = ret.element_tree_id
+                ON (c.structure_tree_id = pet.id)
+              LEFT JOIN rubric_structure_tree ret
+                ON pet.id = ret.structure_tree_id
               LEFT JOIN rubric r
                 ON ret.rubric_id = r.id
           )

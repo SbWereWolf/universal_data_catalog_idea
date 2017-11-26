@@ -17,39 +17,39 @@ SELECT
   CASE
   WHEN
     NOT EXISTS(SELECT NULL
-               FROM element_tree t
-               WHERE t.element_tree_id = e.id)
+               FROM structure_tree t
+               WHERE t.structure_tree_id = e.id)
     AND EXISTS(SELECT NULL
-               FROM element_tree t
-               WHERE t.id = e.element_tree_id)
+               FROM structure_tree t
+               WHERE t.id = e.structure_tree_id)
     THEN 'rubric'
   WHEN
     NOT EXISTS(SELECT NULL
-               FROM element_tree t
-               WHERE t.element_tree_id = e.id)
-    AND e.element_tree_id IS NULL
+               FROM structure_tree t
+               WHERE t.structure_tree_id = e.id)
+    AND e.structure_tree_id IS NULL
     THEN 'single'
   WHEN
     EXISTS(SELECT NULL
-           FROM element_tree t
-           WHERE t.element_tree_id = e.id)
-    AND e.element_tree_id IS NULL
+           FROM structure_tree t
+           WHERE t.structure_tree_id = e.id)
+    AND e.structure_tree_id IS NULL
     THEN 'root'
   WHEN
     EXISTS(SELECT NULL
-           FROM element_tree t
-           WHERE t.element_tree_id = e.id)
+           FROM structure_tree t
+           WHERE t.structure_tree_id = e.id)
     AND EXISTS(SELECT NULL
-               FROM element_tree t
-               WHERE t.id = e.element_tree_id)
+               FROM structure_tree t
+               WHERE t.id = e.structure_tree_id)
     THEN 'section'
   ELSE
     'unknown'
   END
 FROM
-  rubric_element_tree re
-  JOIN element_tree e
-    ON re.element_tree_id = e.id
+  rubric_structure_tree re
+  JOIN structure_tree e
+    ON re.structure_tree_id = e.id
   JOIN rubric r
     ON re.rubric_id = r.id;
 
@@ -139,32 +139,32 @@ FROM
     ON c.id = sm.content_id;
 
 -- показать путь от потомка до родительского корневого элемента 'ekskavatory-karernye'
-WITH RECURSIVE road_map ( id, element_tree_id, code, horizont ) AS
+WITH RECURSIVE road_map ( id, structure_tree_id, code, horizont ) AS
 (
   SELECT
     cet.id              AS id,
-    cet.element_tree_id AS element_tree_id,
+    cet.structure_tree_id AS structure_tree_id,
     r.code              AS code,
     0                   AS horizont
   FROM
-    element_tree cet
-    LEFT JOIN rubric_element_tree ret
-      ON cet.id = ret.element_tree_id
+    structure_tree cet
+    LEFT JOIN rubric_structure_tree ret
+      ON cet.id = ret.structure_tree_id
     LEFT JOIN rubric r
       ON ret.rubric_id = r.id
   WHERE r.code = :CHILD
   UNION
   SELECT
     pet.id,
-    pet.element_tree_id,
+    pet.structure_tree_id,
     r.code,
     horizont + 1
   FROM
-    element_tree pet
+    structure_tree pet
     JOIN road_map c
-      ON (c.element_tree_id = pet.id)
-    LEFT JOIN rubric_element_tree ret
-      ON pet.id = ret.element_tree_id
+      ON (c.structure_tree_id = pet.id)
+    LEFT JOIN rubric_structure_tree ret
+      ON pet.id = ret.structure_tree_id
     LEFT JOIN rubric r
       ON ret.rubric_id = r.id
 )
@@ -177,32 +177,32 @@ ORDER BY
   horizont DESC;
 
 -- показать карту иерархии Сущностей с уровнем иерархии, для корневой рубрики 'GOODS'
-WITH RECURSIVE road_map ( id, element_tree_id, code, horizont ) AS
+WITH RECURSIVE road_map ( id, structure_tree_id, code, horizont ) AS
 (
   SELECT
     pet.id              AS id,
-    pet.element_tree_id AS element_tree_id,
+    pet.structure_tree_id AS structure_tree_id,
     r.code              AS code,
     0                   AS horizont
   FROM
-    element_tree pet
-    LEFT JOIN rubric_element_tree ret
-      ON pet.id = ret.element_tree_id
+    structure_tree pet
+    LEFT JOIN rubric_structure_tree ret
+      ON pet.id = ret.structure_tree_id
     LEFT JOIN rubric r
       ON ret.rubric_id = r.id
   WHERE r.code = :ROOT
   UNION
   SELECT
     cet.id,
-    cet.element_tree_id,
+    cet.structure_tree_id,
     r.code,
     horizont + 1
   FROM
-    element_tree cet
+    structure_tree cet
     JOIN road_map c
-      ON (c.id = cet.element_tree_id)
-    LEFT JOIN rubric_element_tree ret
-      ON cet.id = ret.element_tree_id
+      ON (c.id = cet.structure_tree_id)
+    LEFT JOIN rubric_structure_tree ret
+      ON cet.id = ret.structure_tree_id
     LEFT JOIN rubric r
       ON ret.rubric_id = r.id
 )

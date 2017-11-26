@@ -1,22 +1,22 @@
 --CREATE DATABASE information_catalog;
 
-CREATE TABLE element_tree
+CREATE TABLE structure_tree
 (
   id              SERIAL PRIMARY KEY NOT NULL,
-  element_tree_id INTEGER,
+  structure_tree_id INTEGER,
   is_hidden       INTEGER                  DEFAULT 0,
   insert_date     TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  CONSTRAINT fk_element_tree FOREIGN KEY (element_tree_id) REFERENCES element_tree (id)
+  CONSTRAINT fk_structure_tree FOREIGN KEY (structure_tree_id) REFERENCES structure_tree (id)
 );
-CREATE INDEX ix_element_tree_element_tree_id_id
-  ON element_tree (element_tree_id, id);
+CREATE INDEX ix_structure_tree_structure_tree_id_id
+  ON structure_tree (structure_tree_id, id);
 
 CREATE TABLE rubric
 (
   id          SERIAL PRIMARY KEY NOT NULL,
-  code        CHAR(100),
-  title       VARCHAR(4000),
-  description VARCHAR(4000),
+  code        TEXT,
+  title       TEXT,
+  description TEXT,
   is_hidden   INTEGER                  DEFAULT 0,
   insert_date TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
@@ -26,9 +26,9 @@ CREATE UNIQUE INDEX ux_rubric_code
 CREATE TABLE item
 (
   id          SERIAL PRIMARY KEY NOT NULL,
-  code        CHAR(100),
-  title       VARCHAR(4000),
-  description VARCHAR(4000),
+  code        TEXT,
+  title       TEXT,
+  description TEXT,
   is_hidden   INTEGER                  DEFAULT 0,
   insert_date TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
@@ -38,28 +38,28 @@ CREATE UNIQUE INDEX ux_item_code
 CREATE TABLE property
 (
   id          SERIAL PRIMARY KEY NOT NULL,
-  code        CHAR(100),
-  title       VARCHAR(4000),
-  description VARCHAR(4000),
+  code        TEXT,
+  title       TEXT,
+  description TEXT,
   is_hidden   INTEGER                  DEFAULT 0,
   insert_date TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 CREATE UNIQUE INDEX ux_property_code
   ON property (code);
 
-CREATE TABLE rubric_element_tree
+CREATE TABLE rubric_structure_tree
 (
   id              SERIAL PRIMARY KEY NOT NULL,
   rubric_id       INTEGER            NOT NULL,
-  element_tree_id INTEGER            NOT NULL,
+  structure_tree_id INTEGER            NOT NULL,
   insert_date     TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  CONSTRAINT fk_rubric_element_tree_rubric_id FOREIGN KEY (rubric_id) REFERENCES rubric (id),
-  CONSTRAINT fk_rubric_element_tree_element_tree_id FOREIGN KEY (element_tree_id) REFERENCES element_tree (id)
+  CONSTRAINT fk_rubric_structure_tree_rubric_id FOREIGN KEY (rubric_id) REFERENCES rubric (id),
+  CONSTRAINT fk_rubric_structure_tree_structure_tree_id FOREIGN KEY (structure_tree_id) REFERENCES structure_tree (id)
 );
-CREATE UNIQUE INDEX ux_rubric_element_tree_rubric_id
-  ON rubric_element_tree (rubric_id);
-CREATE UNIQUE INDEX ux_rubric_element_tree_element_tree_id
-  ON rubric_element_tree (element_tree_id);
+CREATE UNIQUE INDEX ux_rubric_structure_tree_rubric_id
+  ON rubric_structure_tree (rubric_id);
+CREATE UNIQUE INDEX ux_rubric_structure_tree_structure_tree_id
+  ON rubric_structure_tree (structure_tree_id);
 
 CREATE TABLE rubric_property
 (
@@ -92,7 +92,7 @@ CREATE UNIQUE INDEX ux_rubric_item_item_id
 CREATE TABLE content
 (
   id          SERIAL PRIMARY KEY NOT NULL,
-  raw         VARCHAR(4000),
+  raw         TEXT,
   property_id INTEGER            NOT NULL,
   insert_date TIMESTAMP WITH TIME ZONE DEFAULT now(),
 
@@ -104,9 +104,9 @@ CREATE INDEX ix_content_property_id
 CREATE TABLE redactor
 (
   id          SERIAL PRIMARY KEY NOT NULL,
-  code        CHAR(100),
-  title       VARCHAR(4000),
-  description VARCHAR(4000),
+  code        TEXT,
+  title       TEXT,
+  description TEXT,
   is_hidden   INTEGER                  DEFAULT 0,
   insert_date TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
@@ -117,7 +117,7 @@ CREATE TABLE string_matter
 (
   content_id  INTEGER            NOT NULL,
   id          SERIAL PRIMARY KEY NOT NULL,
-  string      VARCHAR(4000),
+  string      TEXT,
   insert_date TIMESTAMP WITH TIME ZONE DEFAULT now(),
   CONSTRAINT fk_string_matter_content_id FOREIGN KEY (content_id) REFERENCES content (id)
 );
@@ -160,9 +160,9 @@ CREATE UNIQUE INDEX ux_duration_matter_content_id
 CREATE TABLE tag
 (
   id          SERIAL PRIMARY KEY NOT NULL,
-  code        CHAR(100),
-  title       VARCHAR(4000),
-  description VARCHAR(4000),
+  code        TEXT,
+  title       TEXT,
+  description TEXT,
   is_hidden   INTEGER                  DEFAULT 0,
   insert_date TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
