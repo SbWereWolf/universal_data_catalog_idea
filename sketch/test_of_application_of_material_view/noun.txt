@@ -52,7 +52,8 @@ wolf
 zebra
 airport
 building
-bankshop
+bank
+shop
 church
 store
 department
@@ -135,7 +136,6 @@ stockings
 suit
 sweater
 sweatshirt
-t-shirt
 tie
 trousers
 underclothes
@@ -150,12 +150,12 @@ grill
 cup
 spoon
 microwave
-mixing bowl
-paper towels
+bowl
+towels
 poach
 potholder
 roast
-rolling pin
+pin
 scramble
 simmer
 knife
@@ -212,7 +212,7 @@ tangerine
 watermelon
 attic
 basement
-bath tub
+tub
 bathroom
 bed
 bedroom
@@ -246,7 +246,7 @@ shelf
 sink
 sofa
 stairs
-table
+bench
 toilet
 wall
 window
@@ -303,7 +303,7 @@ celery
 corn
 cucumber
 eggplant
-green pepper
+pepper
 lettuce
 onion
 peas
@@ -311,7 +311,7 @@ potato
 pumpkin
 radish
 spinach
-sweet potato
+potato
 tomato
 turnip
 back

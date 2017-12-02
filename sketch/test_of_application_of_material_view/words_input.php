@@ -20,11 +20,12 @@ function insertFromFile(string $filename, \PDO $connection, string $tableName, s
     }
 }
 
-$connection = new \PDO('pgsql:host=localhost;port=5432;dbname=universal_catalog;user=postgres;password=admin');
+// $connection = new \PDO('pgsql:host=localhost;port=5432;dbname=universal_catalog;user=postgres;password=admin');
+$connection = require 'get_pdo.php';
+
 $filename = 'noun.txt';
 $columnName = 'word';
 $tableName = 'noun';
-
 insertFromFile($filename, $connection, $tableName, $columnName);
 
 $filename = 'adjective.txt';

@@ -1,6 +1,9 @@
 <?php
 
-const BASE_INDEX = 0;
+const NUMERIC_PROPERTY = 'NUMERIC_PROPERTY';
+const STRING_PROPERTY = 'STRING_PROPERTY';
+
+require 'common.php';
 
 /**
  * @param PDO $connection
@@ -14,11 +17,7 @@ function getWords(\PDO $connection, string $tableName): array
         ->query("SELECT DISTINCT word AS word FROM $tableName", PDO::FETCH_NUM)
         ->fetchAll();
 
-    $words = array();
-    foreach ($dataSet as $responseRow) {
-        $words[] = $responseRow[BASE_INDEX];
-
-    }
+    $words = pickUpNestedArray($dataSet);
 
     return $words;
 }
@@ -174,23 +173,25 @@ VALUES
     }
 }
 
-$connection = new \PDO('pgsql:host=localhost;port=5432;dbname=universal_catalog;user=postgres;password=admin');
+// $connection = new \PDO('pgsql:host=localhost;port=5432;dbname=universal_catalog;user=postgres;password=admin');
+
+$connection = require 'get_pdo.php';
 
 $nounTableName = 'noun';
 $nouns = getWords($connection, $nounTableName);
 
 $rubricTableName = 'rubric';
-//insertCode($connection, $rubricTableName, $nouns);
+insertCode($connection, $rubricTableName, $nouns);
 
 $propertyTableName = 'property';
-//insertCode($connection, $propertyTableName, $nouns);
+insertCode($connection, $propertyTableName, $nouns);
 
 linkPropertyToRubric($connection, $nouns);
 
 $adjectiveTableName = 'adjective';
 $adjectives = getWords($connection, $adjectiveTableName);
 
-//addItemToRubric($connection, $nouns, $adjectives);
+addItemToRubric($connection, $nouns, $adjectives);
 
 $connection->exec('
 INSERT INTO content (property_id)
@@ -202,4 +203,112 @@ FROM
     ON ri.rubric_id = rp.rubric_id
 ');
 
-null;
+$connection->exec('
+INSERT INTO item_content (item_id, content_id)
+  SELECT
+    rubric_items.item_id,
+    property_contents.content_id
+  FROM
+    (
+      SELECT
+        ri.item_id     item_id,
+        rp.property_id property_id,
+        row_number()
+        OVER (
+          ORDER BY rp.property_id
+          ) AS         i
+      FROM
+        rubric_property rp
+        JOIN rubric_item ri
+          ON ri.rubric_id = rp.rubric_id
+      ORDER BY
+        rp.property_id
+    ) rubric_items
+    JOIN (
+           SELECT
+             c.id          content_id,
+             c.property_id property_id,
+             row_number()
+             OVER (
+               ORDER BY c.property_id
+               ) AS        i
+           FROM content c
+           ORDER BY
+             c.property_id
+         ) property_contents
+      ON property_contents.property_id = rubric_items.property_id
+         AND rubric_items.i = property_contents.i;
+');
+
+$numericCode = NUMERIC_PROPERTY;
+
+$connection->exec("
+INSERT INTO tag (code, title, description)
+VALUES
+  ('$numericCode', 'Числовое', 'Числовое свойство')
+");
+
+$propertyNumber = count($nouns);
+$numericPie = random_int(1, $propertyNumber);
+
+$connection->exec("
+INSERT INTO property_tag (property_id, tag_id)
+SELECT p.id property_id,(SELECT t.id tag_id  FROM tag t WHERE t.code='$numericCode') tag_id FROM property p LIMIT $numericPie
+");
+
+$connection->exec("
+INSERT INTO digital_matter (content_id, digital)
+SELECT
+  c.id,
+  random()*10000
+FROM
+  tag t
+  JOIN property_tag pt
+    ON t.id = pt.tag_id
+  JOIN content c
+    ON c.property_id = pt.property_id
+WHERE
+  t.code = '$numericCode'
+");
+
+$stringCode = STRING_PROPERTY;
+
+$connection->exec("
+INSERT INTO tag (code, title, description)
+VALUES  
+  ('$stringCode', 'Строковое', 'Строковое свойство')
+");
+
+$connection->exec("
+INSERT INTO property_tag (property_id, tag_id)
+  SELECT
+    p.id                           property_id,
+    (SELECT t.id tag_id
+     FROM tag t
+     WHERE t.code = '$stringCode') tag_id
+  FROM
+    property p
+  WHERE
+    NOT EXISTS(
+        SELECT NULL
+        FROM
+          property_tag pt
+        WHERE
+          pt.property_id = p.id
+    )
+");
+
+$connection->exec("
+INSERT INTO string_matter (content_id, string)
+SELECT
+  c.id id,
+  (SELECT word FROM adjective WHERE c.id IS NOT NULL OFFSET round(random()*(SELECT COUNT(*)-1 FROM adjective)) LIMIT 1) word
+FROM
+  tag t
+  JOIN property_tag pt
+    ON t.id = pt.tag_id
+  JOIN content c
+    ON c.property_id = pt.property_id
+WHERE
+  t.code = '$stringCode'
+");
