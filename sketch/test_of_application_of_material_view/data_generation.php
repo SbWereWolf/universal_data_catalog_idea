@@ -1,9 +1,19 @@
 <?php
 
-const NUMERIC_PROPERTY = 'NUMERIC_PROPERTY';
-const STRING_PROPERTY = 'STRING_PROPERTY';
+/* range for quantity of item at rubric  */
+const FEW_QUANTITY = 1;
+const NORMAL_QUANTITY = 2;
+const MANY_QUANTITY = 3;
 
-require 'common.php';
+const WHOLE = 100;
+
+/* percentage of the whole */
+const FEW_PART = 10;
+const NORMAL_PART = 50;
+const MANY_PART = 80;
+
+require 'array_handler.php';
+require 'property.php';
 
 /**
  * @param PDO $connection
@@ -42,6 +52,39 @@ function insertCode(\PDO $connection, string $tableName, array $itemCollection)
 }
 
 /**
+ * @param int $limit
+ * @param int $whole
+ * @return bool
+ */
+function choose(int $limit, int $whole): bool
+{
+    $quantity = random_int(0, $whole);
+    $let = $quantity < $limit;
+
+    return $let;
+}
+
+/**
+ * @return int
+ */
+function getGenerationLimit(): int
+{
+    $choice = random_int(FEW_QUANTITY, MANY_QUANTITY);
+
+    $letFew = $choice == FEW_QUANTITY;
+    $letNormal = $choice == NORMAL_QUANTITY;
+
+    $limit = MANY_PART;
+    if ($letFew) {
+        $limit = FEW_PART;
+    }
+    if ($letNormal) {
+        $limit = NORMAL_PART;
+    }
+    return $limit;
+}
+
+/**
  * @param $connection
  * @param $codes
  */
@@ -75,10 +118,11 @@ VALUES
 
         $leftValue = $rubric;
 
+        $limit = getGenerationLimit();
+
         foreach ($codes as $property) {
 
-            $choice = random_int(1, 3);
-            $let = $choice > 2;
+            $let = choose($limit, WHOLE);
             if ($let) {
 
                 $rightValue = $property;
@@ -101,11 +145,7 @@ function getCodes(\PDO $connection, string $tableName): array
         ->query("SELECT code AS code FROM $tableName", PDO::FETCH_NUM)
         ->fetchAll();
 
-    $codes = array();
-    foreach ($dataSet as $responseRow) {
-        $codes[] = $responseRow[BASE_INDEX];
-
-    }
+    $codes = pickUpNestedArray($dataSet);
 
     return $codes;
 }
@@ -156,24 +196,22 @@ VALUES
     foreach ($rubricCollection as $rubric) {
 
         $rubricCode = $rubric;
+        $limit = getGenerationLimit();
 
         foreach ($adjectives as $adjective) {
 
-            $choice = random_int(1, 3);
-            $let = $choice > 2;
+            $let = choose($limit, WHOLE);
             if ($let) {
 
                 $itemCode = $rubric . '_' . $adjective;
-                $itemInsertion->execute();
 
+                $itemInsertion->execute();
                 $linkItemToRubric->execute();
             }
 
         }
     }
 }
-
-// $connection = new \PDO('pgsql:host=localhost;port=5432;dbname=universal_catalog;user=postgres;password=admin');
 
 $connection = require 'get_pdo.php';
 

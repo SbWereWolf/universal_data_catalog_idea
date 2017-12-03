@@ -5,10 +5,8 @@
  * Date: 02.12.2017 Time: 21:36
  */
 
-require 'common.php';
-
-const NUMERIC_PROPERTY = 'NUMERIC_PROPERTY';
-const STRING_PROPERTY = 'STRING_PROPERTY';
+require 'array_handler.php';
+require 'property.php';
 
 const REQUIRES_VALUE = ':';
 
@@ -130,12 +128,25 @@ SELECT
   FROM
     rubric_item ri
   WHERE
-    ri.rubric_id = (SELECT id
-                    FROM rubric
-                    WHERE code = '$rubricCode')    
+    ri.rubric_id = (SELECT id FROM rubric WHERE code = '$rubricCode')    
 ";
 
 echo "\n -- SELECT STATEMENT :\n$contentRequest;";
+
+$viewName = $rubricCode . '_v';
+
+$createView = "
+CREATE VIEW $viewName AS
+SELECT
+    ri.item_id item_id,
+    $selectPhase
+  FROM
+    rubric_item ri
+  WHERE
+    ri.rubric_id = ( SELECT id FROM rubric WHERE code = '$rubricCode' )    
+";
+
+echo "\n -- CREATE VIEW :\n$createView;";
 
 $materialViewName = $rubricCode . '_mv';
 
@@ -147,15 +158,7 @@ SELECT
   FROM
     rubric_item ri
   WHERE
-    ri.rubric_id = 
-    (
-    SELECT 
-        id
-    FROM 
-        rubric
-    WHERE 
-        code = '$rubricCode'
-    )    
+    ri.rubric_id = ( SELECT id FROM rubric WHERE code = '$rubricCode' )    
 ";
 
 echo "\n -- CREATE MATERIALIZED VIEW :\n$createMaterialView;";
@@ -167,8 +170,9 @@ foreach ($relationColumns as $column) {
 
     $columnIndexName = $materialViewName . '_' . $column;
     $createColumnIndex[] = "
-CREATE INDEX $columnIndexName ON $materialViewName (\"$column\")
-";
+CREATE INDEX $columnIndexName ON $materialViewName (\"$column\")";
+
+
 }
 $createIndex = implode(';', $createColumnIndex);
 
